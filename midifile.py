@@ -9,9 +9,9 @@ class midifile:
     # Used specs from http://www.midi.org/techspecs/midimessages.php
     # http://www.blitter.com/~russtopia/MIDI/~jglatt/tech/midifile.htm
 
-    """ 
+    """
 This module defines the class midifile which may be used to parse and
-extract information from MIDI (.mid) files and Karaoke (.kar) files. 
+extract information from MIDI (.mid) files and Karaoke (.kar) files.
 This can be useful to analyze a MIDI file or as a back-end for a
 karaoke player. The class midifile creates an object that is associated
 to the MIDI (or .kar) file being parsed.  The following instance attributes
@@ -36,7 +36,7 @@ ATTRIBUTES:
       a list of two elements. The first element is the value itself and
       the second is the real time at which it changed. So in this example
       we would have bpm=[ [60,0.], [90,120], [60,150] ]
-     
+
         bpm=[[120,0.]] # Midi default
 
     	microsecondsperquarternote=[[60000000./120,0.]] # Midi default
@@ -44,26 +44,26 @@ ATTRIBUTES:
 	num=[[4, 0.]] # Midi default
 
     	den=[[4, 0.]] # Midi default
-    
+
     For karaoke .kar files
-    	karfile=Boolean that indicates whether the file has karaoke 
+    	karfile=Boolean that indicates whether the file has karaoke
      information in the .kar format
 
      	kartrack=Track number (starting with 0) with the karaoke information
 
-    	karsyl=List of strings with the kar syllabes 
+    	karsyl=List of strings with the kar syllabes
 
-    	kartimes=list of strings with the real-time (in seconds) associated 
+    	kartimes=list of strings with the real-time (in seconds) associated
      to the kar syllabes
 
      	karlinea=A list of three strings corresponding to the three lines
-     that can be displayed in the karaoke. Note: Three lines is the 
+     that can be displayed in the karaoke. Note: Three lines is the
      maximum that this program can handle!! Here we have the part of the
      text that has already been read and is usually displayed in a different
-     color.    
+     color.
 
     	karlineb=Same as above but for the text that has not yet been read
-     (usually displayed by karaokes on white color). As time goes by, 
+     (usually displayed by karaokes on white color). As time goes by,
      syllabes from this string are removed and appended to the karlinea
      string above
 
@@ -72,7 +72,7 @@ ATTRIBUTES:
 
        tracknames=List of strings with the names of each track
 
-    MIDI note information 
+    MIDI note information
        patchesused=A list of lists, each element
        containing the patches (instruments) used in the file, the
        track number in which it was used and the time at which the
@@ -87,8 +87,8 @@ ATTRIBUTES:
      note_off event, in which case, time_end is set to -1. If two
      note_on events are registered for the same note without a note_off
      event in between, then the time_end for the first note is set to
-     the time_start of the second note. Note on and note off matching is 
-     done across tracks but not across patches, so a piano C4 is not 
+     the time_start of the second note. Note on and note off matching is
+     done across tracks but not across patches, so a piano C4 is not
      considered the same note as a guitar C4.
 
 
@@ -102,7 +102,7 @@ METHODS:
 
    update_karaoke(dt): The input argument dt is a float with the time
      in seconds elapsed since the start of the song. This method then
-     checks the karaoke information and updates the related attributes 
+     checks the karaoke information and updates the related attributes
      (particularly karlinea and karlineb) so that they can be used
      by the caller. Need to have run load_file() before.
 
@@ -122,8 +122,8 @@ EXAMPLES:
      With this module there are some very simple examples that illustrate
      possible use cases. example1.py is an extremely simple text-based
      karaoke application that runs on the console. It doesn't play any
-     music, just shows the lyrics. It has no additional requirements. 
-     example2.py adds music to it using pygame. Requires: pygame. 
+     music, just shows the lyrics. It has no additional requirements.
+     example2.py adds music to it using pygame. Requires: pygame.
      example3.py shows how to use pygame to build a graphic frontend for
      a karaoke application. Requires: pygame.
 
@@ -185,7 +185,7 @@ print m.karlinea[0]+'__'+m.karlineb[0]
 
 
     def load_file(self,fileobject):
-        
+
         if type(fileobject) == str:
             self.fileobject=open(fileobject,'rb')
             self.closeonreturn=True
@@ -244,7 +244,7 @@ print m.karlinea[0]+'__'+m.karlineb[0]
                             dtimesec=dtimesec+secondspertick1
 
 
-                else: # No tempo change. Proceed with value at i0            
+                else: # No tempo change. Proceed with value at i0
                     tickspermicrosecond=division/self.microsecondsperquarternote[i0][0]
                     secondspertick=1./tickspermicrosecond*1e-6
                     dtimesec=dtime*secondspertick
@@ -271,7 +271,8 @@ print m.karlinea[0]+'__'+m.karlineb[0]
                         self.microsecondsperquarternote.append([self.microsecondsperquarternote[-1][0], mastertime])
                         self.bpm.append([self.bpm[-1][0], mastertime])
                     if metatype == 0x1:
-                        if data == '@KMIDI KARAOKE FILE':
+                        # sometimes, there are trailing characters like " tm"
+                        if '@KMIDI KARAOKE FILE' in data:
                             self.karfile=True
                             self.kartrack=itrack+1
                         if self.karfile and itrack == self.kartrack:
@@ -285,11 +286,11 @@ print m.karlinea[0]+'__'+m.karlineb[0]
                                     self.kartimes.append(mastertime)
                                     data=re.sub('/','',data)
                                 self.karsyl.append(data)
-                                self.kartimes.append(mastertime)    
+                                self.kartimes.append(mastertime)
                     if metatype == 0x3: # Track name
                         self.tracknames[itrack]=data
                     if metatype == 0x2F: # End of track
-                        pass 
+                        pass
 
                 elif status == 0xF0 or status == 0xF7: # Now a Sysex event
                     [l,nb,bytesread]=self.read_var_length()
@@ -359,7 +360,7 @@ print m.karlinea[0]+'__'+m.karlineb[0]
             self.karlineb=['']*3
             self.karievent0=[len(self.karsyl)-1]*3
             self.karievent1=[len(self.karsyl)-1]*3
-            self.karievent0[0]=self.karidx            
+            self.karievent0[0]=self.karidx
             idx=self.karidx+1
             iline=0
             while idx <= len(self.karsyl)-1:
@@ -427,7 +428,7 @@ print m.karlinea[0]+'__'+m.karlineb[0]
             tracks2remove=list()
         if patches2remove == None:
             patches2remove=list()
-        
+
         fout=open(fileout,'wb')
         if type(filein) == str:
             self.fileobject=open(filein,'rb')
@@ -509,7 +510,7 @@ print m.karlinea[0]+'__'+m.karlineb[0]
                             dtimesec=dtimesec+secondspertick1
 
 
-                else: # No tempo change. Proceed with value at i0            
+                else: # No tempo change. Proceed with value at i0
                     tickspermicrosecond=division/self.microsecondsperquarternote[i0][0]
                     secondspertick=1./tickspermicrosecond*1e-6
                     dtimesec=dtime*secondspertick
