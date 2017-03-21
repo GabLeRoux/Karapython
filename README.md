@@ -1,12 +1,53 @@
 # Karapython
-Python module to read karaoke .kar files (and also regular midi .mid files). Use it to build your own application or check the stand-alone player in the examples. This is actually just a small application of module midifile, which I wrote to be able to parse MIDI files.
 
-Check the very simple examples (example[1-3].py) to see how this module can be used to implement a karaoke application. The midifile.py module can be useful for other applications too, as it provides the information of each note, including real time on and off setting 
--example1.py is an extremely simple text-based karaoke application that runs on the console. It doesn't play any music, just shows the lyrics. It has no additional requirements. 
--example2.py adds music to it using pygame. Requires: pygame. 
--example3.py shows how to use pygame to build a graphic frontend for a karaoke application. Requires: pygame.
+## Main application
 
-Documentation for midifile module:
+:microphone: A Python Karaoke application written in Python on top of [pygame](pygame) to let you sing like never before.
+
+![application-preview.png](docs/application-preview.png)
+
+### Getting started
+
+It is recommanded you use a [virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/). See [#1](https://github.com/hsocasnavarro/Karapython/issues/1), _it currently only supports Python2.7_. Help is welcome :v:
+
+```bash
+pip install -r requirements.txt
+python main.py
+```
+
+### Bring this project to life
+
+Here's a few things that could be done to improve this a little :rocket:
+
+- [x] File prompt to select karaoke songs! (still needs some improvements)
+- [ ] Allow Pausing the song
+- [ ] Allow Opening a new song without quitting the app
+- [ ] Display informations for the currently playing song
+- [ ] Playlist support
+- [ ] Maybe add some visualisation
+- [ ] Create a gh-pages page to get some visibility
+- [ ] Migrate to Python3 (see [#1](https://github.com/hsocasnavarro/Karapython/issues/1))
+- [ ] Add tests
+
+And way more. PRs welcome!
+
+## The Karaoke file Library
+
+See [midifile.py](midifle.py)
+
+Python module to read karaoke `.kar` files (and also regular midi `.mid` files). Use it to build your own application or check the stand-alone player in the examples. The module can parse MIDI files and can be useful for other applications too, as it provides the information of each note, including real time on and off setting.
+
+### Examples
+
+Check the very simple [examples/](examples) to see how this module can be used to implement a karaoke application
+- [examples/example1.py](examples/example1.py) is an extremely simple text-based karaoke application that runs on the console. It doesn't play any music, just shows the lyrics. It has no additional requirements.
+
+The following example requires [pygame](pygame)
+
+- [examples/example2.py](examples/example2.py) adds music to it using [pygame](pygame). 
+- [examples/example3.py](examples/example3.py) shows how to use [pygame](pygame) to build a graphic frontend for a karaoke application.
+
+### Module documentation
 
 This module defines the class midifile which may be used to parse and
 extract information from MIDI (.mid) files and Karaoke (.kar) files. 
@@ -15,8 +56,7 @@ karaoke player. The class midifile creates an object that is associated
 to the MIDI (or .kar) file being parsed. The following instance attributes
 are defined:
 
-
-ATTRIBUTES:
+#### Attributes
 
         fileobject: A file type associated to the .mid or .kar file
 
@@ -89,7 +129,7 @@ ATTRIBUTES:
      done across tracks but not across patches, so a piano C4 is not 
      considered the same note as a guitar C4.
 
-METHODS:
+#### Methods
 
    The following methods are exposed by the class:
 
@@ -113,7 +153,7 @@ METHODS:
      output file.
 
 
-EXAMPLES:
+#### Examples
 
      In this repository there are some very simple examples that illustrate
      possible use cases. example1.py is an extremely simple text-based
